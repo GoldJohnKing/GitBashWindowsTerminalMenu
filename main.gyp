@@ -2,10 +2,6 @@
   'target_defaults': {
     'conditions': [
       [ 'OS=="win"', {
-        'sources': [
-          'src/explorer_command.cc',
-          'src/explorer_command.def',
-        ],
         'include_dirs': [
           'vcpkg_installed/<(target_arch)-windows/include/fmt',
           'vcpkg_installed/<(target_arch)-windows/include/wil',
@@ -54,6 +50,10 @@
   'targets': [{
     'target_name': 'Code Modern Explorer Menu',
     'type': 'shared_library',
+    'sources': [
+      'src/explorer_command.cc',
+      'src/explorer_command.def',
+    ],
     'defines': [
       'EXE_NAME="Code.exe"',
       'DIR_NAME="Microsoft VS Code"',
@@ -79,6 +79,10 @@
   }, {
     'target_name': 'Code Insiders Modern Explorer Menu',
     'type': 'shared_library',
+    'sources': [
+      'src/explorer_command.cc',
+      'src/explorer_command.def',
+    ],
     'defines': [
       'EXE_NAME="Code - Insiders.exe"',
       'DIR_NAME="Microsoft VS Code Insiders"',
