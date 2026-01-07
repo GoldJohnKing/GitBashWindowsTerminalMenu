@@ -19,7 +19,7 @@ if ($ScriptRoot -match 'Insiders') {
 if ($ScriptRoot -match 'GitBash') {
     $ProductName = 'GitBashWTContextMenu'
     $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
-    $MenuName = "在 Git Bash 中打开"
+    $MenuName = "在 Git Bash 中打开 (Windows Terminal)"
 }
 
 if (-not (Test-Path $ProductPath)) {
