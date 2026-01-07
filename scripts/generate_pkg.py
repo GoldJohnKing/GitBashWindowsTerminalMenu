@@ -67,7 +67,7 @@ with open(manifest, 'r') as f:
     content = content.replace('@@ApplicationIdShort@@', 'GitBashWindowsTerminal')
     content = content.replace('@@MenuID@@', 'OpenGitBashWindowsTerminal')
     content = content.replace('@@CLSID@@', gitbash_windows_terminal_clsid_map[arch])
-    content = content.replace('@@PackageDLL@@', 'Git Bash Windows Terminal Modern Explorer Menu.dll')
+    content = content.replace('@@PackageDLL@@', 'Git Bash Windows Terminal Modern Context Menu.dll')
 
 # Copy AppxManifest file to the package directory.
 manifest_output = os.path.join(pkg_dir, 'AppxManifest.xml')
