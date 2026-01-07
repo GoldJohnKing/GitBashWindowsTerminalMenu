@@ -27,9 +27,11 @@ if (-not (Test-Path $ProductPath)) {
 }
 
 # Process both cases at once
-$RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
-REG ADD "$RegKeyPath" /v "Title" /t REG_SZ /d "$MenuName" /reg:64 /f
-REG ADD "$RegKeyPath" /v "Title" /t REG_SZ /d "$MenuName" /reg:32 /f
+$RegKeyPath = 'HKCU:\SOFTWARE\Classes\' + $ProductName -replace '\s+'
+if (-not (Test-Path $RegKeyPath)) {
+    New-Item -Path $RegKeyPath -Force | Out-Null
+}
+Set-ItemProperty -Path $RegKeyPath -Name "Title" -Value $MenuName -Force
 
 # Temporary enable Developer Mode if initially disabled
 $RegPath = "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
