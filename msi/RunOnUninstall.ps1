@@ -17,7 +17,7 @@ if ($ScriptRoot -match 'Insiders') {
 }
 
 if ($ScriptRoot -match 'GitBashWindowsTerminal') {
-    $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
+    $ProductName = 'Git Bash Windows Terminal Modern Explorer Menu'
     $PackageName = 'GitBashWindowsTerminal.Modern.ContextMenu'
     $RegKeyPath = 'HKCU\SOFTWARE\Classes\GitBashWindowsTerminalModernContextMenu'
 }
