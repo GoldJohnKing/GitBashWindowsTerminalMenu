@@ -21,7 +21,7 @@ if ($Variant -eq 'insiders') {
 
 if ($Variant -eq 'gitbash') {
     $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
-    $ProductId = 'c745f6d0-0932-55f3-b5cc-59g0f837gb4c'
+    $ProductId = 'c745f6d0-0932-55f3-b5cc-59a0f837fb4c'
     $UpgradeCode = '52e9cbda-cfb3-568c-bd11-9d396c2e9f2c'
 }
 
