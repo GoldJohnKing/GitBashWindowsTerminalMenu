@@ -16,8 +16,8 @@ if ($ScriptRoot -match 'Insiders') {
     $MenuName = "通过 Code Insiders 打开"
 }
 
-if ($ScriptRoot -match 'GitBashWindowsTerminal') {
-    $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
+if ($ScriptRoot -match 'GitBash') {
+    $ProductName = 'GitBashWTContextMenu'
     $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
     $MenuName = "在 Git Bash 中打开 (Windows Terminal)"
 }

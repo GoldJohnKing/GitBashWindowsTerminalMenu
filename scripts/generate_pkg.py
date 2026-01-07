@@ -58,16 +58,16 @@ with open(manifest, 'r') as f:
     content = content.replace('@@CLSID@@', code_insiders_clsid_map[arch])
     content = content.replace('@@PackageDLL@@', 'Code Insiders Modern Explorer Menu.dll')
   if pkg_type == 'gitbash':
-    content = content.replace('@@PublisherDisplayName@@', 'Git Bash Windows Terminal Modern Context Menu')
-    content = content.replace('@@Publisher@@', 'GitBashWindowsTerminal.Modern.ContextMenu')
-    content = content.replace('@@PackageDescription@@', 'Git Bash Windows Terminal Modern Context Menu')
-    content = content.replace('@@PackageName@@', 'GitBashWindowsTerminal.Modern.ContextMenu')
-    content = content.replace('@@PackageDisplayName@@', 'Git Bash Windows Terminal Modern Context Menu')
+    content = content.replace('@@PublisherDisplayName@@', 'GitBashWTContextMenu')
+    content = content.replace('@@Publisher@@', 'GitBashWTContextMenu')
+    content = content.replace('@@PackageDescription@@', 'Git Bash Windows Terminal Context Menu')
+    content = content.replace('@@PackageName@@', 'GitBashWTContextMenu')
+    content = content.replace('@@PackageDisplayName@@', 'Git Bash Windows Terminal Context Menu')
     content = content.replace('@@Application@@', 'wt.exe')
-    content = content.replace('@@ApplicationIdShort@@', 'GitBashWindowsTerminal')
+    content = content.replace('@@ApplicationIdShort@@', 'GitBashWT')
     content = content.replace('@@MenuID@@', 'OpenGitBashWindowsTerminal')
     content = content.replace('@@CLSID@@', gitbash_windows_terminal_clsid_map[arch])
-    content = content.replace('@@PackageDLL@@', 'Git Bash Windows Terminal Modern Context Menu.dll')
+    content = content.replace('@@PackageDLL@@', 'GitBashWTContextMenu.dll')
 
 # Copy AppxManifest file to the package directory.
 manifest_output = os.path.join(pkg_dir, 'AppxManifest.xml')
