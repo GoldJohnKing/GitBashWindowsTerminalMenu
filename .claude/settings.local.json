@@ -7,7 +7,8 @@
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(cat:*)",
-      "Bash(gh workflow run:*)"
+      "Bash(gh workflow run:*)",
+      "Bash(gh run download:*)"
     ]
   }
 }
