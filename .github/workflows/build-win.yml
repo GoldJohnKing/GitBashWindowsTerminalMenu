@@ -34,7 +34,7 @@ jobs:
         - x64
         #- arm64
         Product: [
-          { ProductName: Git Bash Windows Terminal Modern Explorer Menu, Variant: gitbash }
+          { ProductName: Git Bash Windows Terminal Modern Context Menu, Variant: gitbash }
         ]
         
     steps:

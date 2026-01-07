@@ -107,7 +107,7 @@
       }],
     ],
   }, {
-    'target_name': 'Git Bash Windows Terminal Modern Explorer Menu',
+    'target_name': 'Git Bash Windows Terminal Modern Context Menu',
     'type': 'shared_library',
     'sources': [
       'src/explorer_command_gitbash.cc',
