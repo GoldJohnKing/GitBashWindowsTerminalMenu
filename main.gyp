@@ -102,8 +102,7 @@
         ],
       }],
     ],
-  }],
-  {
+  }, {
     'target_name': 'Git Bash Windows Terminal Modern Explorer Menu',
     'type': 'shared_library',
     'sources': [
