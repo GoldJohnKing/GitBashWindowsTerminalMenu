@@ -19,6 +19,12 @@ if ($Variant -eq 'insiders') {
     $UpgradeCode = '41d8bac9-bea2-457b-ac00-8c296b1d8e1b'
 }
 
+if ($Variant -eq 'gitbash') {
+    $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
+    $ProductId = 'c745f6d0-0932-55f3-b5cc-59g0f837gb4c'
+    $UpgradeCode = '52e9cbda-cfb3-568c-bd11-9d396c2e9f2c'
+}
+
 $CustomAction = @(
     New-InstallerCustomAction -FileId 'RunOnInstall' -RunOnInstall
     New-InstallerCustomAction -FileId 'RunOnUninstall' -RunOnUninstall

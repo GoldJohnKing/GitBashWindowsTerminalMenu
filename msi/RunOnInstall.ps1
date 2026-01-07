@@ -16,6 +16,12 @@ if ($ScriptRoot -match 'Insiders') {
     $MenuName = "通过 Code Insiders 打开"
 }
 
+if ($ScriptRoot -match 'GitBashWindowsTerminal') {
+    $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
+    $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
+    $MenuName = "在 Git Bash 中打开 (Windows Terminal)"
+}
+
 if (-not (Test-Path $ProductPath)) {
     New-Item -Path $ProductPath -Force
 }

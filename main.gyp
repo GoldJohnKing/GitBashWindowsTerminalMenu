@@ -103,4 +103,34 @@
       }],
     ],
   }],
+  {
+    'target_name': 'Git Bash Windows Terminal Modern Explorer Menu',
+    'type': 'shared_library',
+    'sources': [
+      'src/explorer_command_gitbash.cc',
+      'src/explorer_command_gitbash.def',
+    ],
+    'defines': [
+      'EXE_NAME="wt.exe"',
+      'DIR_NAME="Git"',
+    ],
+    'conditions': [
+      [ 'OS=="win"', {
+        'conditions': [
+          ['target_arch=="x64"', {
+            'TargetMachine' : 17,             # /MACHINE:X64
+            'defines': [
+              'DLL_UUID="8A7F5B3E-2C91-4A5F-9B8D-1E2C3D4A5F6B"',
+            ],
+          }],
+          ['target_arch=="arm64"', {
+            'TargetMachine' : 18,             # /MACHINE:ARM64
+            'defines': [
+              'DLL_UUID="9C8E6D4F-3D02-5B6A-0C9E-2F3D4E5F6A7B"',
+            ],
+          }],
+        ],
+      }],
+    ],
+  }],
 }

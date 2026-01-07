@@ -16,6 +16,12 @@ if ($ScriptRoot -match 'Insiders') {
     $RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
 }
 
+if ($ScriptRoot -match 'GitBashWindowsTerminal') {
+    $ProductName = 'Git Bash Windows Terminal Modern Context Menu'
+    $PackageName = 'GitBashWindowsTerminal.Modern.ContextMenu'
+    $RegKeyPath = 'HKCU\SOFTWARE\Classes\GitBashWindowsTerminalModernContextMenu'
+}
+
 # Process both cases at once
 REG DELETE "$RegKeyPath" /reg:64 /f
 REG DELETE "$RegKeyPath" /reg:32 /f
