@@ -115,7 +115,7 @@ class __declspec(uuid(DLL_UUID)) ExplorerCommandHandler final : public RuntimeCl
     value_size_w = ExpandEnvironmentStrings(value_w, expanded_value_w, kMaxStringLength);
     return (value_size_w && value_size_w < kMaxStringLength)
         ? SHStrDup(expanded_value_w, name)
-        : SHStrDup(L"\u5728 Git Bash \u4e2d\u6253\u5f00", name);
+        : SHStrDup(L"Open in Git Bash", name);
   }
 
   IFACEMETHODIMP GetIcon(IShellItemArray* items, PWSTR* icon) {
