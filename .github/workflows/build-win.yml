@@ -96,8 +96,8 @@ jobs:
         Copy-Item -LiteralPath "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -Destination "$github_workspace\output"
     
     - name: Set Version for non-release run
-      if: github.ref_name == 'main'
-      run: echo "Version=4.0.0" >> $env:GITHUB_ENV
+      if: github.ref_name == 'main' || github.ref_name == 'dev'
+      run: echo "Version=1.0.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
       run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
