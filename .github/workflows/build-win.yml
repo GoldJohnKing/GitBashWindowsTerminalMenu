@@ -102,9 +102,13 @@ jobs:
     - name: Run build-msi.ps1 script
       run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
 
+    - name: List output directory
+      run: |
+        Get-ChildItem -Path "output" -Recurse | Format-Table -AutoSize
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4.4.0
-      if: github.ref_name == 'main'
+      if: github.ref_name == 'main' || github.ref_name == 'dev'
       with:
         name: ${{ matrix.Product.ProductName }}.${{ env.Version }}.${{ matrix.arch }}.msi
         path: |
