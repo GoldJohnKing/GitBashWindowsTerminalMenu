@@ -19,7 +19,7 @@ An MSI package that adds "在 Git Bash 中打开" (Open in Git Bash) to the Wind
 
 ## Features:
 - Adds "在 Git Bash 中打开" context menu option in Windows 11 modern menu
-- Works with files, folders, and drives
+- Works with folders, folder background, and drives (not files)
 - Does not interfere with classic menu
 - Opens Git Bash in Windows Terminal at the selected location
 - Support for x64 and ARM64 architectures
@@ -50,7 +50,7 @@ The output MSI will be created in the `output` directory.
 1. Run the MSI installer as administrator
 2. Accept the UAC prompt
 3. Restart Windows Explorer (or sign out/sign in)
-4. Right-click on a file, folder, or drive to see "在 Git Bash 中打开" in the modern menu
+4. Right-click on a folder, folder background, or drive to see "在 Git Bash 中打开" in the modern menu
 
 ## Uninstallation
 

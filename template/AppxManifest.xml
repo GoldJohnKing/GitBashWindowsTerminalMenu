@@ -72,9 +72,6 @@
       <Extensions>
         <desktop4:Extension Category="windows.fileExplorerContextMenus">
           <desktop4:FileExplorerContextMenus>
-            <desktop4:ItemType Type="*">
-              <desktop4:Verb Id="@@MenuID@@" Clsid="@@CLSID@@" />
-            </desktop4:ItemType>
             <desktop5:ItemType Type="Directory">
               <desktop5:Verb Id="@@MenuID@@" Clsid="@@CLSID@@" />
             </desktop5:ItemType>
