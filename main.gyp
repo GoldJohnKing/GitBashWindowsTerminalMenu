@@ -48,65 +48,6 @@
     ],
   },
   'targets': [{
-    'target_name': 'Code Modern Explorer Menu',
-    'type': 'shared_library',
-    'sources': [
-      'src/explorer_command.cc',
-      'src/explorer_command.def',
-    ],
-    'defines': [
-      'EXE_NAME="Code.exe"',
-      'DIR_NAME="Microsoft VS Code"',
-    ],
-    'conditions': [
-      [ 'OS=="win"', {
-        'conditions': [
-          ['target_arch=="x64"', {
-            'TargetMachine' : 17,             # /MACHINE:X64
-            'defines': [ 
-              'DLL_UUID="E4E4C322-3388-45AF-8D39-BE19BFC78A18"',
-            ],
-          }],
-          ['target_arch=="arm64"', {
-            'TargetMachine' : 18,             # /MACHINE:ARM64 https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.vcprojectengine.machinetypeoption?view=visualstudiosdk-2022
-            'defines': [ 
-              'DLL_UUID="12483301-B459-40BE-A434-DF8010E8958F"',
-            ],
-          }],
-        ],
-      }],
-    ],
-  }, {
-    'target_name': 'Code Insiders Modern Explorer Menu',
-    'type': 'shared_library',
-    'sources': [
-      'src/explorer_command.cc',
-      'src/explorer_command.def',
-    ],
-    'defines': [
-      'EXE_NAME="Code - Insiders.exe"',
-      'DIR_NAME="Microsoft VS Code Insiders"',
-      'INSIDER=1',
-    ],
-    'conditions': [
-      [ 'OS=="win"', {
-        'conditions': [
-          ['target_arch=="x64"', {
-            'TargetMachine' : 17,             # /MACHINE:X64
-            'defines': [ 
-              'DLL_UUID="799F4F7E-5934-4001-A74C-E207F44F05B8"',
-            ],
-          }],
-          ['target_arch=="arm64"', {
-            'TargetMachine' : 18,             # /MACHINE:ARM64
-            'defines': [ 
-              'DLL_UUID="7D34756D-32DD-4EE6-B99F-2691C0DAD875"',
-            ],
-          }],
-        ],
-      }],
-    ],
-  }, {
     'target_name': 'GitBashWTContextMenu',
     'type': 'shared_library',
     'sources': [
