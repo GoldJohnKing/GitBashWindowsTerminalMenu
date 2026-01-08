@@ -89,18 +89,20 @@ jobs:
           out\${{ matrix.Product.ProductName }}.dll
 
     - name: Copy files for msi
+      if: github.ref_name == 'main'
       run: |
         New-Item -Name "$github_workspace\output" -ItemType Directory
 
         Copy-Item -LiteralPath "out\Default\${{ matrix.Product.ProductName }}.dll" -Destination "$github_workspace\output"
-        
+
         Copy-Item -LiteralPath "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -Destination "$github_workspace\output"
-    
+
     - name: Set Version for non-release run
       if: github.ref_name == 'main'
       run: echo "Version=4.0.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
+      if: github.ref_name == 'main'
       run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
 
     - name: Upload artifact
