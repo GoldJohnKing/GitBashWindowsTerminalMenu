@@ -8,6 +8,7 @@
 #include <shellapi.h>
 #include <shlobj.h>
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <utility>
 #include <shlwapi.h>
@@ -91,62 +92,85 @@ namespace {
   return out;
 }
 
+// Thread-safe cache for menu metadata
+std::optional<std::wstring> g_cachedTitle;
+std::optional<std::wstring> g_cachedIconPath;
+std::once_flag g_titleCacheFlag;
+std::once_flag g_iconCacheFlag;
+
+void InitializeTitleCache() {
+  const size_t kMaxStringLength = 1024;
+  wchar_t value_w[kMaxStringLength] = L"";
+  DWORD value_size_w = sizeof(value_w);
+  const wchar_t kTitleRegkey[] = L"Software\\Classes\\GitBashWTContextMenu";
+  HKEY subhkey = nullptr;
+  LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, kTitleRegkey, 0, KEY_READ, &subhkey);
+  if (result != ERROR_SUCCESS) {
+    result = RegOpenKeyEx(HKEY_CURRENT_USER, kTitleRegkey, 0, KEY_READ, &subhkey);
+  }
+
+  if (result == ERROR_SUCCESS) {
+    DWORD type = 0;
+    result = RegQueryValueExW(subhkey, L"Title", nullptr, &type,
+                    reinterpret_cast<LPBYTE>(value_w), &value_size_w);
+    RegCloseKey(subhkey);
+
+    if (result == ERROR_SUCCESS && value_size_w > 0) {
+      g_cachedTitle = value_w;
+      return;
+    }
+  }
+
+  g_cachedTitle = L"Open in Git Bash";
+}
+
+void InitializeIconCache() {
+  // Try to get Git Bash icon from Git installation
+  std::filesystem::path git_icon_path(L"C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico");
+  if (std::filesystem::exists(git_icon_path)) {
+    g_cachedIconPath = git_icon_path.wstring();
+    return;
+  }
+
+  // Fallback to wt.exe icon
+  std::filesystem::path wt_path;
+  PWSTR programFilesPath = nullptr;
+  HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &programFilesPath);
+  if (SUCCEEDED(hr)) {
+    wt_path = std::filesystem::path(programFilesPath) / L"Microsoft\\WindowsApps\\wt.exe";
+    CoTaskMemFree(programFilesPath);
+    if (std::filesystem::exists(wt_path)) {
+      g_cachedIconPath = wt_path.wstring();
+      return;
+    }
+  }
+
+  // Final fallback to system32
+  std::filesystem::path wt_system32(L"C:\\Windows\\System32\\wt.exe");
+  if (std::filesystem::exists(wt_system32)) {
+    g_cachedIconPath = wt_system32.wstring();
+    return;
+  }
+
+  // No icon found
+  g_cachedIconPath = std::nullopt;
+}
+
 }
 
 class __declspec(uuid(DLL_UUID)) ExplorerCommandHandler final : public RuntimeClass<RuntimeClassFlags<ClassicCom | InhibitRoOriginateError>, IExplorerCommand> {
  public:
   // IExplorerCommand implementation:
   IFACEMETHODIMP GetTitle(IShellItemArray* items, PWSTR* name) {
-    const size_t kMaxStringLength = 1024;
-    wchar_t value_w[kMaxStringLength] = L"";
-    wchar_t expanded_value_w[kMaxStringLength] = L"";
-    DWORD value_size_w = sizeof(value_w);
-    const wchar_t kTitleRegkey[] = L"Software\\Classes\\GitBashWTContextMenu";
-    HKEY subhkey = nullptr;
-    LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, kTitleRegkey, 0, KEY_READ, &subhkey);
-    if (result != ERROR_SUCCESS) {
-      result = RegOpenKeyEx(HKEY_CURRENT_USER, kTitleRegkey, 0, KEY_READ, &subhkey);
-    }
-
-    if (result == ERROR_SUCCESS) {
-      DWORD type = 0;
-      result = RegQueryValueExW(subhkey, L"Title", nullptr, &type,
-                      reinterpret_cast<LPBYTE>(value_w), &value_size_w);
-      RegCloseKey(subhkey);
-
-      if (result == ERROR_SUCCESS && value_size_w > 0) {
-        return SHStrDup(value_w, name);
-      }
-    }
-
-    return SHStrDup(L"Open in Git Bash", name);
+    std::call_once(g_titleCacheFlag, InitializeTitleCache);
+    return SHStrDup(g_cachedTitle->c_str(), name);
   }
 
   IFACEMETHODIMP GetIcon(IShellItemArray* items, PWSTR* icon) {
-    // Try to get Git Bash icon from Git installation
-    std::filesystem::path git_icon_path = std::filesystem::path("C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico");
-    if (std::filesystem::exists(git_icon_path)) {
-      return SHStrDupW(git_icon_path.c_str(), icon);
+    std::call_once(g_iconCacheFlag, InitializeIconCache);
+    if (g_cachedIconPath) {
+      return SHStrDupW(g_cachedIconPath->c_str(), icon);
     }
-
-    // Fallback to wt.exe icon
-    std::filesystem::path wt_path;
-    PWSTR programFilesPath = nullptr;
-    HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &programFilesPath);
-    if (SUCCEEDED(hr)) {
-      wt_path = std::filesystem::path(programFilesPath) / L"Microsoft\\WindowsApps\\wt.exe";
-      CoTaskMemFree(programFilesPath);
-      if (std::filesystem::exists(wt_path)) {
-        return SHStrDupW(wt_path.c_str(), icon);
-      }
-    }
-
-    // Final fallback to system32
-    wt_path = L"C:\\Windows\\System32\\wt.exe";
-    if (std::filesystem::exists(wt_path)) {
-      return SHStrDupW(wt_path.c_str(), icon);
-    }
-
     return E_FAIL;
   }
 
@@ -186,13 +210,13 @@ class __declspec(uuid(DLL_UUID)) ExplorerCommandHandler final : public RuntimeCl
                   wil::unique_cotaskmem_string path;
                   result = item->GetDisplayName(SIGDN_FILESYSPATH, &path);
                   if (SUCCEEDED(result)) {
-                      // Build command: wt.exe -p "Git Bash" -d "<path>"
-                      std::wstring cmd = L"wt.exe -p \"Git Bash\" -d " + QuoteForCommandLineArg(path.get());
+                      // Quote path once and reuse
+                      std::wstring quotedPath = QuoteForCommandLineArg(path.get());
+                      std::wstring params = L"-p \"Git Bash\" -d " + quotedPath;
 
                       // Execute the command
                       HINSTANCE ret = ShellExecuteW(nullptr, L"open", L"wt.exe",
-                          (L"-p \"Git Bash\" -d " + QuoteForCommandLineArg(path.get())).c_str(),
-                          nullptr, SW_SHOW);
+                          params.c_str(), nullptr, SW_SHOW);
                       if ((INT_PTR)ret <= HINSTANCE_ERROR) {
                           RETURN_LAST_ERROR();
                       }
