@@ -1,40 +1,75 @@
-改了一点自用，效果如图，可以在win11右键一级菜单里使用VScode
-<br>
-<img src="https://guiguisocute-1318017707.cos.ap-guangzhou.myqcloud.com/20251003230218172.png"/>
+# Git Bash Windows Terminal Context Menu
 
+An MSI package that adds "在 Git Bash 中打开" (Open in Git Bash) to the Windows 11 Modern Explorer menu, using Windows Terminal.
 
-#### 吐槽
-不知道微软哪次更新把win11的win10右键中“在终端打开”给删了，现在只有win11菜单能用，调了半天都没法回来，不想回到地址栏输powershell的苦日子了，只能选择这种曲线救国方式，所幸还蛮好看的，但我估计还得适应一阵子
-
-
-***
-> 以下为源仓库README原文
-# Code Modern Explorer Menu
-An MSI package that adds the Windows 11 Modern Explorer menu for Microsoft Visual Studio Code.
-  
 > [!NOTE]
 > Please restart Windows Explorer after installation.
-> 
+>
 > Installation requires admin rights and accepting UAC prompt to temporarily enable Developer Mode if required and restore its initial status after installation.
 
 > [!CAUTION]
 > AV may flag this as a virus due to the lack of a signature and self-elevation.
 
 ## Requirements:
-- Windows 11+
-- VSCode installed
+- Windows 11 (Build 26100+)
+- Windows Terminal installed
+- Git for Windows installed
+- Windows Terminal configured with a "Git Bash" profile
 - Admin rights
 
 ## Features:
-- does not interfere with the classic menu
-- does not interfere with the original VSCode Insiders menu
-- should not interfere when VSCode stable introduces the menu
-- works with both system and user installation locations
-- support the case when VSCode runs as Administrator, thanks to  [ArcticLampyrid](https://github.com/microsoft/vscode-explorer-command/pull/17)
-- Also works for Devices and drives, thanks to [AndromedaMelody](https://github.com/microsoft/vscode-explorer-command/pull/16)
-- Future VSCode updates won’t break the menu, thanks to [huutaiii](https://github.com/huutaiii/vscode-explorer-command)
+- Adds "在 Git Bash 中打开" context menu option in Windows 11 modern menu
+- Works with files, folders, and drives
+- Does not interfere with classic menu
+- Opens Git Bash in Windows Terminal at the selected location
+- Support for x64 and ARM64 architectures
 
-## Project changes:
-- replace Azure DevOps with GitHub Actions
-- removed C++ dependencies from the repository
-- added vcpkg package manager
+## Building
+
+### Prerequisites
+- Python 3.x
+- node-gyp (submodule included)
+- Visual Studio 2022 with C++ build tools
+- vcpkg package manager
+- PowerShell with PSMSI module
+
+### Build Steps
+
+```powershell
+# Build x64 version
+.\build-msi.ps1 -Variant 'gitbash' -Platform 'x64'
+
+# Build ARM64 version
+.\build-msi.ps1 -Variant 'gitbash' -Platform 'arm64'
+```
+
+The output MSI will be created in the `output` directory.
+
+## Installation
+
+1. Run the MSI installer as administrator
+2. Accept the UAC prompt
+3. Restart Windows Explorer (or sign out/sign in)
+4. Right-click on a file, folder, or drive to see "在 Git Bash 中打开" in the modern menu
+
+## Uninstallation
+
+Use "Add or Remove Programs" in Windows Settings to uninstall.
+
+## Project Details
+
+This project provides a focused implementation for Git Bash integration with Windows 11's modern context menu. It uses Windows Terminal as the terminal emulator.
+
+### Build System
+- Uses GYP (Generate Your Projects) via node-gyp submodule for build configuration
+- Compiles with Visual Studio MSBuild
+- No npm/bun dependencies (build system uses Python scripts)
+
+### Architecture
+- Shell extension DLL (`explorer_command_gitbash.cc`) that implements the context menu handler
+- CLSID-based registration for Windows 11 modern menu integration
+- Support for x64 and ARM64 architectures
+
+## Credits
+
+This is a fork/adaptation of [microsoft/vscode-explorer-command](https://github.com/microsoft/vscode-explorer-command), modified specifically for Git Bash integration with Windows Terminal.

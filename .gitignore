@@ -1,6 +1,13 @@
 out*/*
 [D]efault/*
 **/vcpkg_installed/*
+.vcpkg
+
+# AI tool and workflow files (development only, not in repository)
+.claude/
+CLAUDE.md
+AGENTS.md
+openspec/
 
 # VS Code files for those working on multiple tools
 .vscode/*

@@ -1,4 +1,4 @@
-param($ProductName = 'Code Modern Explorer Menu', $Variant = 'stable', $Platform = 'x64', $Version = '1.0.0')
+param($Variant = 'gitbash', $Platform = 'x64', $Version = '1.0.0')
 
 Import-Module PSMSI
 
@@ -10,14 +10,10 @@ if (Test-Path $OutputDirectory) {
     Get-ChildItem -Path $OutputDirectory | ForEach-Object { Remove-Item -Path $_ -Force -Recurse  }
 }
 
-$ProductId = 'a434e5cf-1a39-49a1-b956-362c95aa85df'
-$UpgradeCode = '6b06a391-688d-4b09-961c-9a655292bc05'
-
-if ($Variant -eq 'insiders') {
-    $ProductName = 'Code Insiders Modern Explorer Menu'
-    $ProductId = 'd634ca99-9829-44e2-a4bb-48f9e726fa3b'
-    $UpgradeCode = '41d8bac9-bea2-457b-ac00-8c296b1d8e1b'
-}
+# Git Bash Windows Terminal Context Menu
+$ProductName = 'GitBashWTContextMenu'
+$ProductId = 'c745f6d0-0932-55f3-b5cc-59a0f837fb4c'
+$UpgradeCode = '52e9cbda-cfb3-568c-bd11-9d396c2e9f2c'
 
 $CustomAction = @(
     New-InstallerCustomAction -FileId 'RunOnInstall' -RunOnInstall

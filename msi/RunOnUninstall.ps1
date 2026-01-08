@@ -16,6 +16,12 @@ if ($ScriptRoot -match 'Insiders') {
     $RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
 }
 
+if ($ScriptRoot -match 'GitBash') {
+    $ProductName = 'GitBashWTContextMenu'
+    $PackageName = 'GitBashWTContextMenu'
+    $RegKeyPath = 'HKCU\SOFTWARE\Classes\GitBashWTContextMenu'
+}
+
 # Process both cases at once
 REG DELETE "$RegKeyPath" /reg:64 /f
 REG DELETE "$RegKeyPath" /reg:32 /f

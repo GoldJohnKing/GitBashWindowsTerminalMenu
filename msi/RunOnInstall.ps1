@@ -16,14 +16,22 @@ if ($ScriptRoot -match 'Insiders') {
     $MenuName = "通过 Code Insiders 打开"
 }
 
+if ($ScriptRoot -match 'GitBash') {
+    $ProductName = 'GitBashWTContextMenu'
+    $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
+    $MenuName = "在 Git Bash 中打开 (Windows Terminal)"
+}
+
 if (-not (Test-Path $ProductPath)) {
     New-Item -Path $ProductPath -Force
 }
 
 # Process both cases at once
-$RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
-REG ADD "$RegKeyPath" /v "Title" /t REG_SZ /d "$MenuName" /reg:64 /f
-REG ADD "$RegKeyPath" /v "Title" /t REG_SZ /d "$MenuName" /reg:32 /f
+$RegKeyPath = 'HKCU:\SOFTWARE\Classes\' + $ProductName -replace '\s+'
+if (-not (Test-Path $RegKeyPath)) {
+    New-Item -Path $RegKeyPath -Force | Out-Null
+}
+Set-ItemProperty -Path $RegKeyPath -Name "Title" -Value $MenuName -Force
 
 # Temporary enable Developer Mode if initially disabled
 $RegPath = "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
