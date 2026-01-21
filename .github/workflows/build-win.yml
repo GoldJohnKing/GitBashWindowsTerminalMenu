@@ -17,7 +17,6 @@ on:
 env:
     VCPKG_DEFAULT_TRIPLET: x64-windows
     GYP_MSVS_VERSION: '2022'
-    Version: ${{ github.ref_name || github.event.release.tag_name }}
     
 permissions: write-all
 
@@ -96,8 +95,12 @@ jobs:
         
         Copy-Item -LiteralPath "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -Destination "$github_workspace\output"
     
+    - name: Set Version for release run
+      if: github.ref_type == 'tag'
+      run: echo "Version=${{ github.event.release.tag_name }}" >> $env:GITHUB_ENV
+
     - name: Set Version for non-release run
-      if: github.ref_name == 'main'
+      if: github.ref_type != 'tag'
       run: echo "Version=4.0.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
@@ -105,7 +108,7 @@ jobs:
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4.4.0
-      if: github.ref_name == 'main'
+      if: github.ref_type != 'tag'
       with:
         name: ${{ matrix.Product.ProductName }}.${{ env.Version }}.${{ matrix.arch }}.msi
         path: |
