@@ -101,7 +101,7 @@ jobs:
 
     - name: Set Version for non-release run
       if: github.ref_type != 'tag'
-      run: echo "Version=4.0.0" >> $env:GITHUB_ENV
+      run: echo "Version=4.1.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
       run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
