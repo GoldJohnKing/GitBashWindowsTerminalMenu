@@ -210,13 +210,8 @@ class __declspec(uuid(DLL_UUID)) ExplorerCommandHandler final : public RuntimeCl
                   wil::unique_cotaskmem_string path;
                   result = item->GetDisplayName(SIGDN_FILESYSPATH, &path);
                   if (SUCCEEDED(result)) {
-                      // Quote path once and reuse
-                      std::wstring quotedPath = QuoteForCommandLineArg(path.get());
-                      std::wstring params = L"-p \"Git Bash\" -d " + quotedPath;
-
-                      // Execute the command
                       HINSTANCE ret = ShellExecuteW(nullptr, L"open", L"wt.exe",
-                          params.c_str(), nullptr, SW_SHOW);
+                          (L"-p \"Git Bash\" -d " + QuoteForCommandLineArg(path.get())).c_str(), nullptr, SW_SHOW);
                       if ((INT_PTR)ret <= HINSTANCE_ERROR) {
                           RETURN_LAST_ERROR();
                       }
