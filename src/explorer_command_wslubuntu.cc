@@ -121,7 +121,7 @@ void InitializeTitleCache() {
     }
   }
 
-  g_cachedTitle = L"\u5728 Ubuntu \u4e2d\u6253\u5f00";  // 在 Ubuntu 中打开
+  g_cachedTitle = L"Open in Ubuntu";  // Fallback if registry read fails
 }
 
 std::wstring FindUbuntuUuid() {
