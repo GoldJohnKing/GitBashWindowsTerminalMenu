@@ -6,21 +6,24 @@ if (-not ([Security.Principal.WindowsPrincipal]::new([Security.Principal.Windows
 
 $ScriptRoot = if ( $PSScriptRoot ) { $PSScriptRoot } else { ($(try { $script:psEditor.GetEditorContext().CurrentFile.Path } catch {}), $script:MyInvocation.MyCommand.Path, $script:PSCommandPath, $(try { $script:psISE.CurrentFile.Fullpath.ToString() } catch {}) | % { if ($_ ) { $_.ToLower() } } | Split-Path -EA 0 | Get-Unique ) | Get-Unique }
 
-$ProductName = 'Code Modern Explorer Menu'
+$ProductName = $env:MSIProductName
+$MenuName = $env:MSIMenuName
+
+if (-not $ProductName) {
+    # 回退：从已安装文件检测产品类型
+    if (Test-Path "$ScriptRoot\WSLUbuntuWTContextMenu*.dll") {
+        $ProductName = 'WSLUbuntuWTContextMenu'
+        $MenuName = "在 Ubuntu 中打开 (Windows Terminal)"
+    } elseif (Test-Path "$ScriptRoot\CodeInsiders*.dll") {
+        $ProductName = 'Code Insiders Modern Explorer Menu'
+        $MenuName = "通过 Code Insiders 打开"
+    } else {
+        $ProductName = 'Code Modern Explorer Menu'
+        $MenuName = "通过 Code 打开"
+    }
+}
+
 $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
-$MenuName = "通过 Code 打开"
-
-if ($ScriptRoot -match 'Insiders') {
-    $ProductName = 'Code Insiders Modern Explorer Menu'
-    $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
-    $MenuName = "通过 Code Insiders 打开"
-}
-
-if ($ScriptRoot -match 'WSLUbuntu') {
-    $ProductName = 'WSLUbuntuWTContextMenu'
-    $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
-    $MenuName = "在 Ubuntu 中打开 (Windows Terminal)"
-}
 
 if (-not (Test-Path $ProductPath)) {
     New-Item -Path $ProductPath -Force

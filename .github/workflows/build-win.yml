@@ -90,11 +90,11 @@ jobs:
 
     - name: Copy files for msi
       run: |
-        New-Item -Name "$github_workspace\output" -ItemType Directory
-
-        Copy-Item -LiteralPath "out\Default\${{ matrix.Product.ProductName }}.dll" -Destination "$github_workspace\output"
-        
-        Copy-Item -LiteralPath "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -Destination "$github_workspace\output"
+        # Files are already in out directory where build-msi.ps1 expects them
+        # Just verify they exist
+        Test-Path "out\Default\${{ matrix.Product.ProductName }}.dll" -PathType Leaf
+        Test-Path "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -PathType Leaf
+        Test-Path "out\${{ matrix.Product.ProductName }} ${{ matrix.arch }}.appx" -PathType Leaf
     
     - name: Set Version for non-release run
       if: github.ref_name == 'main' || github.ref_name == 'wsl-ubuntu' || github.ref_name == 'dev' || github.event_name == 'pull_request'

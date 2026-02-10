@@ -6,21 +6,21 @@ if (-not ([Security.Principal.WindowsPrincipal]::new([Security.Principal.Windows
 
 $ScriptRoot = if ( $PSScriptRoot ) { $PSScriptRoot } else { ($(try { $script:psEditor.GetEditorContext().CurrentFile.Path } catch {}), $script:MyInvocation.MyCommand.Path, $script:PSCommandPath, $(try { $script:psISE.CurrentFile.Fullpath.ToString() } catch {}) | % { if ($_ ) { $_.ToLower() } } | Split-Path -EA 0 | Get-Unique ) | Get-Unique }
 
-$ProductName = 'Code Modern Explorer Menu'
-$PackageName = $ProductName -replace '\s+', '.'
-$RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
+$ProductName = $env:MSIProductName
 
-if ($ScriptRoot -match 'Insiders') {
-    $ProductName = 'Code Insiders Modern Explorer Menu'
-    $PackageName = $ProductName -replace '\s+', '.'
-    $RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
+if (-not $ProductName) {
+    # 回退：从已安装文件检测产品类型
+    if (Test-Path "$ScriptRoot\WSLUbuntuWTContextMenu*.dll") {
+        $ProductName = 'WSLUbuntuWTContextMenu'
+    } elseif (Test-Path "$ScriptRoot\CodeInsiders*.dll") {
+        $ProductName = 'Code Insiders Modern Explorer Menu'
+    } else {
+        $ProductName = 'Code Modern Explorer Menu'
+    }
 }
 
-if ($ScriptRoot -match 'WSLUbuntu') {
-    $ProductName = 'WSLUbuntuWTContextMenu'
-    $PackageName = 'WSLUbuntuWTContextMenu'
-    $RegKeyPath = 'HKCU\SOFTWARE\Classes\WSLUbuntuWTContextMenu'
-}
+$PackageName = if ($ProductName -eq 'WSLUbuntuWTContextMenu') { $ProductName } else { $ProductName -replace '\s+', '.' }
+$RegKeyPath = if ($ProductName -eq 'WSLUbuntuWTContextMenu') { 'HKCU\SOFTWARE\Classes\WSLUbuntuWTContextMenu' } else { 'HKCU\SOFTWARE\Classes\' + ($ProductName -replace '\s+') }
 
 # Process both cases at once
 REG DELETE "$RegKeyPath" /reg:64 /f
