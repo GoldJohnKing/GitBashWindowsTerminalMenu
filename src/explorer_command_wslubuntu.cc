@@ -102,7 +102,7 @@ void InitializeTitleCache() {
   const size_t kMaxStringLength = 1024;
   wchar_t value_w[kMaxStringLength] = L"";
   DWORD value_size_w = sizeof(value_w);
-  const wchar_t kTitleRegkey[] = L"Software\\Classes\\GitBashWTContextMenu";
+  const wchar_t kTitleRegkey[] = L"Software\\Classes\\WSLUbuntuWTContextMenu";
   HKEY subhkey = nullptr;
   LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, kTitleRegkey, 0, KEY_READ, &subhkey);
   if (result != ERROR_SUCCESS) {

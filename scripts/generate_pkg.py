@@ -45,12 +45,11 @@ out_dir = os.path.join(root, "out")
 pkg_type = sys.argv[1]
 arch = sys.argv[2]
 
-# Parse variant from command line args (default to 'gitbash' for backward compatibility)
-variant = "gitbash"
-if len(sys.argv) > 3:
-    variant_arg = sys.argv[3].lower()
-    if variant_arg in VARIANT_CONFIG:
-        variant = variant_arg
+# Parse variant from pkg_type (which matches the variant name)
+variant = pkg_type.lower()
+if variant not in VARIANT_CONFIG:
+    # Fallback for backward compatibility
+    variant = "gitbash"
 
 config = VARIANT_CONFIG[variant]
 pkg_dir = os.path.join(out_dir, pkg_type + "_explorer_pkg_" + arch)
