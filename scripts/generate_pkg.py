@@ -4,29 +4,13 @@ from shutil import copy
 import os
 import sys
 
-# Configuration for different variants
+# Configuration for WSLUbuntu variant only
 VARIANT_CONFIG = {
-    "gitbash": {
-        "clsid_map": {
-            "x86": "1A8B6C4F-4E13-5C7A-1D8F-3A4B5C6D7E8F",
-            "x64": "8A7F5B3E-2C91-4A5F-9B8D-1E2C3D4A5F6B",
-            "arm64": "9C8E6D4F-3D02-5B6A-0C9E-2F3D4E5F6A7B",
-        },
-        "PackageName": "GitBashWTContextMenu",
-        "PackageDisplayName": "Git Bash Windows Terminal Context Menu",
-        "PackageDLL": "GitBashWTContextMenu.dll",
-        "MenuID": "OpenGitBashWindowsTerminal",
-        "ApplicationIdShort": "GitBashWT",
-        "Application": "GitBashWTContextMenu",
-        "PublisherDisplayName": "GitBashWTContextMenu",
-        "Publisher": "GitBashWTContextMenu",
-        "PackageDescription": "Git Bash Windows Terminal Context Menu",
-    },
     "wslubuntu": {
         "clsid_map": {
-            "x86": "1A8B6C4F-4E13-5C7A-1D8F-3A4B5C6D7E8F",
-            "x64": "8A7F5B3E-2C91-4A5F-9B8D-1E2C3D4A5F6B",
-            "arm64": "9C8E6D4F-3D02-5B6A-0C9E-2F3D4E5F6A7B",
+            "x86": "C1D2E3F4-A5B6-7890-CDEF-1234567890AB",
+            "x64": "D2E3F4A5-B6C7-8901-DEFA-2345678901BC",
+            "arm64": "E3F4A5B6-C7D8-9012-EFAB-3456789012CD",
         },
         "PackageName": "WSLUbuntuWTContextMenu",
         "PackageDisplayName": "WSL Ubuntu Windows Terminal Context Menu",
@@ -42,17 +26,11 @@ VARIANT_CONFIG = {
 
 root = os.path.dirname(os.path.dirname(__file__))
 out_dir = os.path.join(root, "out")
-pkg_type = sys.argv[1]
-arch = sys.argv[2]
+arch = sys.argv[1]
 
-# Parse variant from pkg_type (which matches the variant name)
-variant = pkg_type.lower()
-if variant not in VARIANT_CONFIG:
-    # Fallback for backward compatibility
-    variant = "gitbash"
-
+variant = "wslubuntu"
 config = VARIANT_CONFIG[variant]
-pkg_dir = os.path.join(out_dir, pkg_type + "_explorer_pkg_" + arch)
+pkg_dir = os.path.join(out_dir, variant + "_explorer_pkg_" + arch)
 
 # Create output directory.
 if not os.path.exists(pkg_dir):

@@ -64,13 +64,13 @@
           ['target_arch=="x64"', {
             'TargetMachine' : 17,             # /MACHINE:X64
             'defines': [
-              'DLL_UUID="8A7F5B3E-2C91-4A5F-9B8D-1E2C3D4A5F6B"',
+              'DLL_UUID="D2E3F4A5-B6C7-8901-DEFA-2345678901BC"',
             ],
           }],
           ['target_arch=="arm64"', {
             'TargetMachine' : 18,             # /MACHINE:ARM64
             'defines': [
-              'DLL_UUID="9C8E6D4F-3D02-5B6A-0C9E-2F3D4E5F6A7B"',
+              'DLL_UUID="E3F4A5B6-C7D8-9012-EFAB-3456789012CD"',
             ],
           }],
         ],

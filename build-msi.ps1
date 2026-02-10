@@ -1,4 +1,4 @@
-param($Variant = 'gitbash', $Platform = 'x64', $Version = '1.0.0')
+param($Platform = 'x64', $Version = '1.0.0')
 
 Import-Module PSMSI
 
@@ -23,7 +23,7 @@ $CustomAction = @(
 $InstallerFile = {
     New-InstallerFile -Source "$ScriptRoot\[Content_Types].xml"
     New-InstallerFile -Source "$ScriptRoot\AppxBlockMap.xml"
-    New-InstallerFile -Source "$ScriptRoot\out\$($Variant)_explorer_pkg_$($Platform)\AppxManifest.xml"
+    New-InstallerFile -Source "$ScriptRoot\out\wslubuntu_explorer_pkg_$($Platform)\AppxManifest.xml"
     New-InstallerFile -Source "$ScriptRoot\out\$ProductName $Platform.appx"
     New-InstallerFile -Source "$ScriptRoot\out\$ProductName.dll"
     New-InstallerFile -Source "$ScriptRoot\msi\RunOnInstall.ps1" -Id 'RunOnInstall'

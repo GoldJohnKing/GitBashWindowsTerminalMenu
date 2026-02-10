@@ -35,7 +35,7 @@ jobs:
         - x64
         #- arm64
         Product: [
-          { ProductName: WSLUbuntuWTContextMenu, Variant: wslubuntu }
+          { ProductName: WSLUbuntuWTContextMenu }
         ]
         
     steps:
@@ -68,11 +68,11 @@ jobs:
       run: |
         $makeappx = "C:\Program Files (x86)\Windows Kits\10\App Certification Kit\makeappx.exe"
         
-        python3 .\scripts\generate_pkg.py ${{ matrix.Product.Variant }} ${{ matrix.arch }} .\template\AppxManifest.xml
+        python3 .\scripts\generate_pkg.py ${{ matrix.arch }} .\template\AppxManifest.xml
 
         Set-Location out
 
-        & "$makeappx" pack /d "${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}" /p "${{ matrix.Product.ProductName }} ${{ matrix.arch }}.appx" /nv
+        & "$makeappx" pack /d "wslubuntu_explorer_pkg_${{ matrix.arch }}" /p "${{ matrix.Product.ProductName }} ${{ matrix.arch }}.appx" /nv
 
     - name: Copy dll for artifact upload
       run: |
@@ -93,7 +93,7 @@ jobs:
         # Files are already in out directory where build-msi.ps1 expects them
         # Just verify they exist
         Test-Path "out\Default\${{ matrix.Product.ProductName }}.dll" -PathType Leaf
-        Test-Path "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -PathType Leaf
+        Test-Path "out\wslubuntu_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -PathType Leaf
         Test-Path "out\${{ matrix.Product.ProductName }} ${{ matrix.arch }}.appx" -PathType Leaf
     
     - name: Set Version for non-release run
@@ -101,7 +101,7 @@ jobs:
       run: echo "Version=2.0.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
-      run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
+      run: .\build-msi.ps1 -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
 
     - name: List output directory
       run: |
