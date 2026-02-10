@@ -20,7 +20,8 @@ $RegKeyPath = 'HKCU:\SOFTWARE\Classes\WSLUbuntuWTContextMenu'
 if (-not (Test-Path $RegKeyPath)) {
     New-Item -Path $RegKeyPath -Force | Out-Null
 }
-Set-ItemProperty -Path $RegKeyPath -Name "Title" -Value $MenuName -Force
+# Use REG ADD to ensure correct encoding for Chinese characters
+REG ADD "HKCU\SOFTWARE\Classes\WSLUbuntuWTContextMenu" /v "Title" /t REG_SZ /d "$MenuName" /f
 
 # Temporary enable Developer Mode if initially disabled
 $RegPath = "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
