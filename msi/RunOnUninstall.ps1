@@ -16,10 +16,10 @@ if ($ScriptRoot -match 'Insiders') {
     $RegKeyPath = 'HKCU\SOFTWARE\Classes\' + $ProductName -replace '\s+'
 }
 
-if ($ScriptRoot -match 'GitBash') {
-    $ProductName = 'GitBashWTContextMenu'
-    $PackageName = 'GitBashWTContextMenu'
-    $RegKeyPath = 'HKCU\SOFTWARE\Classes\GitBashWTContextMenu'
+if ($ScriptRoot -match 'WSLUbuntu') {
+    $ProductName = 'WSLUbuntuWTContextMenu'
+    $PackageName = 'WSLUbuntuWTContextMenu'
+    $RegKeyPath = 'HKCU\SOFTWARE\Classes\WSLUbuntuWTContextMenu'
 }
 
 # Process both cases at once

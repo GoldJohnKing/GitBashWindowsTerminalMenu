@@ -1,4 +1,4 @@
-﻿# If not running as Administrator, re-launch the script with elevated privileges
+# If not running as Administrator, re-launch the script with elevated privileges
 if (-not ([Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
     Start-Process powershell.exe -ArgumentList "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($script:MyInvocation.MyCommand.Path)`"" -Verb RunAs -Wait -WindowStyle Minimized
     exit
@@ -16,10 +16,10 @@ if ($ScriptRoot -match 'Insiders') {
     $MenuName = "通过 Code Insiders 打开"
 }
 
-if ($ScriptRoot -match 'GitBash') {
-    $ProductName = 'GitBashWTContextMenu'
+if ($ScriptRoot -match 'WSLUbuntu') {
+    $ProductName = 'WSLUbuntuWTContextMenu'
     $ProductPath = "$Env:LOCALAPPDATA\Programs\$ProductName"
-    $MenuName = "在 Git Bash 中打开 (Windows Terminal)"
+    $MenuName = "在 Ubuntu 中打开 (Windows Terminal)"
 }
 
 if (-not (Test-Path $ProductPath)) {

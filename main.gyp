@@ -48,11 +48,11 @@
     ],
   },
   'targets': [{
-    'target_name': 'GitBashWTContextMenu',
+    'target_name': 'WSLUbuntuWTContextMenu',
     'type': 'shared_library',
     'sources': [
-      'src/explorer_command_gitbash.cc',
-      'src/explorer_command_gitbash.def',
+      'src/explorer_command_wslubuntu.cc',
+      'src/explorer_command_wslubuntu.def',
     ],
     'defines': [
       'EXE_NAME="wt.exe"',

@@ -10,10 +10,10 @@ if (Test-Path $OutputDirectory) {
     Get-ChildItem -Path $OutputDirectory | ForEach-Object { Remove-Item -Path $_ -Force -Recurse  }
 }
 
-# Git Bash Windows Terminal Context Menu
-$ProductName = 'GitBashWTContextMenu'
-$ProductId = 'c745f6d0-0932-55f3-b5cc-59a0f837fb4c'
-$UpgradeCode = '52e9cbda-cfb3-568c-bd11-9d396c2e9f2c'
+# WSL Ubuntu Windows Terminal Context Menu
+$ProductName = 'WSLUbuntuWTContextMenu'
+$ProductId = 'c745f6d0-0932-55f3-b5cc-59a0f837fb4d'
+$UpgradeCode = '52e9cbda-cfb3-568c-bd11-9d396c2e9f2d'
 
 $CustomAction = @(
     New-InstallerCustomAction -FileId 'RunOnInstall' -RunOnInstall

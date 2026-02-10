@@ -121,39 +121,80 @@ void InitializeTitleCache() {
     }
   }
 
-  g_cachedTitle = L"Open in Git Bash";
+  g_cachedTitle = L"在 Ubuntu 中打开";
+}
+
+std::wstring FindUbuntuUuid() {
+    const wchar_t kLxssRegKey[] = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Lxss";
+    HKEY hKey = nullptr;
+    
+    if (RegOpenKeyExW(HKEY_CURRENT_USER, kLxssRegKey, 0, KEY_READ, &hKey) != ERROR_SUCCESS) {
+        return L"";
+    }
+    
+    wchar_t subKeyName[256];
+    DWORD subKeyNameSize = 256;
+    DWORD index = 0;
+    
+    while (RegEnumKeyExW(hKey, index++, subKeyName, &subKeyNameSize, nullptr, nullptr, nullptr, nullptr) == ERROR_SUCCESS) {
+        HKEY hSubKey = nullptr;
+        if (RegOpenKeyExW(hKey, subKeyName, 0, KEY_READ, &hSubKey) == ERROR_SUCCESS) {
+            wchar_t distroName[256];
+            DWORD distroNameSize = sizeof(distroName);
+            DWORD type = 0;
+            
+            if (RegQueryValueExW(hSubKey, L"DistributionName", nullptr, &type, 
+                                 reinterpret_cast<LPBYTE>(distroName), &distroNameSize) == ERROR_SUCCESS) {
+                if (wcscmp(distroName, L"Ubuntu") == 0) {
+                    RegCloseKey(hSubKey);
+                    RegCloseKey(hKey);
+                    return std::wstring(subKeyName);
+                }
+            }
+            RegCloseKey(hSubKey);
+        }
+        subKeyNameSize = 256;
+    }
+    
+    RegCloseKey(hKey);
+    return L"";
 }
 
 void InitializeIconCache() {
-  // Try to get Git Bash icon from Git installation
-  std::filesystem::path git_icon_path(L"C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico");
-  if (std::filesystem::exists(git_icon_path)) {
-    g_cachedIconPath = git_icon_path.wstring();
-    return;
-  }
-
-  // Fallback to wt.exe icon
-  std::filesystem::path wt_path;
-  PWSTR programFilesPath = nullptr;
-  HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &programFilesPath);
-  if (SUCCEEDED(hr)) {
-    wt_path = std::filesystem::path(programFilesPath) / L"Microsoft\\WindowsApps\\wt.exe";
-    CoTaskMemFree(programFilesPath);
-    if (std::filesystem::exists(wt_path)) {
-      g_cachedIconPath = wt_path.wstring();
-      return;
+    // Try to get WSL Ubuntu icon
+    std::wstring uuid = FindUbuntuUuid();
+    if (!uuid.empty()) {
+        wchar_t userProfile[MAX_PATH];
+        if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, MAX_PATH) > 0) {
+            std::filesystem::path wslIconPath = std::filesystem::path(userProfile) / 
+                L"AppData" / L"Local" / L"wsl" / uuid / L"shortcut.ico";
+            if (std::filesystem::exists(wslIconPath)) {
+                g_cachedIconPath = wslIconPath.wstring();
+                return;
+            }
+        }
     }
-  }
-
-  // Final fallback to system32
-  std::filesystem::path wt_system32(L"C:\\Windows\\System32\\wt.exe");
-  if (std::filesystem::exists(wt_system32)) {
-    g_cachedIconPath = wt_system32.wstring();
-    return;
-  }
-
-  // No icon found
-  g_cachedIconPath = std::nullopt;
+    
+    // Fall back to wt.exe icon
+    std::filesystem::path wt_path;
+    PWSTR programFilesPath = nullptr;
+    HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &programFilesPath);
+    if (SUCCEEDED(hr)) {
+        wt_path = std::filesystem::path(programFilesPath) / L"Microsoft\\WindowsApps\\wt.exe";
+        CoTaskMemFree(programFilesPath);
+        if (std::filesystem::exists(wt_path)) {
+            g_cachedIconPath = wt_path.wstring();
+            return;
+        }
+    }
+    
+    std::filesystem::path wt_system32(L"C:\\Windows\\System32\\wt.exe");
+    if (std::filesystem::exists(wt_system32)) {
+        g_cachedIconPath = wt_system32.wstring();
+        return;
+    }
+    
+    g_cachedIconPath = std::nullopt;
 }
 
 }
@@ -210,8 +251,8 @@ class __declspec(uuid(DLL_UUID)) ExplorerCommandHandler final : public RuntimeCl
                   wil::unique_cotaskmem_string path;
                   result = item->GetDisplayName(SIGDN_FILESYSPATH, &path);
                   if (SUCCEEDED(result)) {
-                      HINSTANCE ret = ShellExecuteW(nullptr, L"open", L"wt.exe",
-                          (L"-p \"Git Bash\" -d " + QuoteForCommandLineArg(path.get())).c_str(), nullptr, SW_SHOW);
+                       HINSTANCE ret = ShellExecuteW(nullptr, L"open", L"wt.exe",
+                           (L"-p \"Ubuntu\" wsl.exe --cd " + QuoteForCommandLineArg(path.get())).c_str(), nullptr, SW_SHOW);
                       if ((INT_PTR)ret <= HINSTANCE_ERROR) {
                           RETURN_LAST_ERROR();
                       }
