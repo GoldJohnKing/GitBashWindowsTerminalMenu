@@ -97,8 +97,8 @@ jobs:
         Copy-Item -LiteralPath "out\${{ matrix.Product.Variant }}_explorer_pkg_${{ matrix.arch }}\AppxManifest.xml" -Destination "$github_workspace\output"
     
     - name: Set Version for non-release run
-      if: github.ref_name == 'main' || github.ref_name == 'dev' || github.event_name == 'pull_request'
-      run: echo "Version=1.0.0" >> $env:GITHUB_ENV
+      if: github.ref_name == 'main' || github.ref_name == 'wsl-ubuntu' || github.ref_name == 'dev' || github.event_name == 'pull_request'
+      run: echo "Version=2.0.0" >> $env:GITHUB_ENV
 
     - name: Run build-msi.ps1 script
       run: .\build-msi.ps1 -ProductName "${{ matrix.Product.ProductName }}" -Variant ${{ matrix.Product.Variant }} -Platform ${{ matrix.arch }} -Version ${{ env.Version }}
@@ -109,7 +109,7 @@ jobs:
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4.4.0
-      if: github.ref_name == 'main' || github.ref_name == 'dev' || github.event_name == 'pull_request'
+      if: github.ref_name == 'main' || github.ref_name == 'wsl-ubuntu' || github.ref_name == 'dev' || github.event_name == 'pull_request'
       with:
         name: ${{ matrix.Product.ProductName }}.${{ env.Version }}.${{ matrix.arch }}.msi
         path: |
