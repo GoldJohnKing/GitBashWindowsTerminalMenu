@@ -7,6 +7,7 @@ on:
   push:
     branches:
     - main
+    - wsl-ubuntu
     paths-ignore:
       - '**/*.md'
 
@@ -34,7 +35,7 @@ jobs:
         - x64
         #- arm64
         Product: [
-          { ProductName: GitBashWTContextMenu, Variant: gitbash }
+          { ProductName: WSLUbuntuWTContextMenu, Variant: wslubuntu }
         ]
         
     steps:
